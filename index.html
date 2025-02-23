@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Balance Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      text-align: center;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 2px 2px 12px rgba(0,0,0,0.1);
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    pre {
+      text-align: left;
+      background: #f9f9f9;
+      padding: 10px;
+      border-radius: 5px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Balance Calculator</h2>
+    <input type="number" id="deposited" placeholder="Enter deposited amount">
+    <input type="number" id="rent" placeholder="Enter Notice Period Charges">
+    <input type="number" id="early_closing" placeholder="Enter Early Closing/Rent Deduction">
+    <input type="number" id="pickup" placeholder="Enter pickup charges">
+    <input type="number" id="damage" placeholder="Enter damage charges">
+    <input type="number" id="other_deductions" placeholder="Enter other deductions">
+    <button onclick="calculateBalance()">Calculate Balance</button>
+    <h3 id="result"></h3>
+    <pre id="details"></pre>
+    
+    <input type="tel" id="phone" placeholder="Enter phone number">
+    <button onclick="sendToWhatsApp()">Send to WhatsApp</button>
+  </div>
+
+  <script>
+    function calculateBalance() {
+      // Retrieve input values (defaulting to 0 if empty)
+      let deposited = parseFloat(document.getElementById('deposited').value) || 0;
+      let noticePeriod = parseFloat(document.getElementById('rent').value) || 0;
+      let earlyClosing = parseFloat(document.getElementById('early_closing').value) || 0;
+      let pickup = parseFloat(document.getElementById('pickup').value) || 0;
+      let damage = parseFloat(document.getElementById('damage').value) || 0;
+      let otherDeductions = parseFloat(document.getElementById('other_deductions').value) || 0;
+
+      // Calculate total deductions and balance
+      let totalDeductions = earlyClosing + noticePeriod + pickup + damage + otherDeductions;
+      let balance = deposited - totalDeductions;
+
+      // Display result and details in the requested format
+      document.getElementById('result').innerText = `Refundable Balance Amount: ${balance}`;
+      document.getElementById('details').innerText = `*REFUND DETAILS*
+Total Deposit: ${deposited}
+
+*Deduction:-*
+1.) Early Closing/Rent Deduction: ${earlyClosing}
+2.) Notice Period Charges: ${noticePeriod}
+3.) Pickup Charges: ${pickup}
+4.) Damage Charges: ${damage}
+5.) Other Deductions: ${otherDeductions}
+
+Refundable Balance Amount: ${balance}`;
+    }
+    
+    function sendToWhatsApp() {
+      let phone = document.getElementById('phone').value;
+      let detailsText = document.getElementById('details').innerText;
+      if (phone) {
+        let url = `https://wa.me/${phone}?text=${encodeURIComponent(detailsText)}`;
+        window.open(url, '_blank');
+      } else {
+        alert("Please enter a valid phone number");
+      }
+    }
+  </script>
+</body>
+</html>
